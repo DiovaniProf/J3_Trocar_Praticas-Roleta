@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#04132d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="Roleta interativa para compartilhar experiências e ampliar possibilidades.">
   <title>Compartilhar experiências, ampliar possibilidades.</title>
   <link rel="stylesheet" href="style.css">
@@ -11,7 +14,10 @@
 </head>
 <body>
   <main class="experience">
-    <!-- O título já faz parte da imagem ILHA.jpg; não o duplicamos visualmente. -->
+    <button class="fullscreen-toggle" type="button" id="fullscreenButton" aria-label="Ativar tela cheia" title="Tela cheia (F11 no computador)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <!-- O título faz parte de ILHA2.jpg e é reproduzido apenas em telas pequenas. -->
     <h1 class="visually-hidden">Compartilhar experiências, ampliar possibilidades.</h1>
 
     <section class="workspace" aria-label="Roleta de participantes">
@@ -47,25 +53,29 @@
             </svg>
             <span id="spinButtonText">GIRAR ROLETA</span>
           </button>
-          <button type="button" class="icon-button" id="historyButton" aria-label="Abrir histórico dos sorteios" aria-expanded="false" aria-controls="historyPanel" title="Histórico">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.3-5.8M3.5 4.5v4.8h4.8M12 7.5v5l3.5 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <button type="button" class="icon-button" id="settingsButton" aria-label="Abrir opções" aria-expanded="false" aria-controls="settingsPanel" title="Opções da roleta">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 17h16M9 4v6M15 14v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="2.3" fill="#a5edff"/><circle cx="15" cy="17" r="2.3" fill="#a5edff"/></svg>
           </button>
         </div>
-        <div class="control-bottom">
-          <label class="no-repeat-toggle">
-            <input id="noRepeatToggle" type="checkbox" checked>
-            <span class="switch" aria-hidden="true"></span>
-            <span>Não repetir nomes</span>
-          </label>
-          <span id="drawCounter" class="draw-counter" aria-live="polite">0 de 10 sorteados</span>
-          <button type="button" id="resetButton" class="reset-button" title="Apagar histórico e reiniciar todos os sorteios">Reiniciar</button>
-        </div>
+        <div id="drawCounter" class="draw-counter" aria-live="polite">0 de 10 sorteados</div>
       </div>
-      <section class="history-panel" id="historyPanel" aria-label="Histórico dos sorteios" hidden>
-        <div class="history-header"><strong>Histórico</strong><button type="button" class="history-close" id="closeHistoryButton" aria-label="Fechar histórico">×</button></div>
-        <ol id="historyList" class="history-list"></ol>
-        <p id="historyEmpty" class="history-empty">Nenhum nome sorteado ainda.</p>
-      </section>
+      <aside class="settings-panel" id="settingsPanel" aria-label="Opções da roleta" hidden>
+        <div class="settings-heading"><strong>Opções da roleta</strong><button type="button" id="closeSettingsButton" class="history-close" aria-label="Fechar opções">×</button></div>
+        <label class="no-repeat-toggle">
+          <input id="noRepeatToggle" type="checkbox" checked>
+          <span class="switch" aria-hidden="true"></span>
+          <span>Não repetir nomes</span>
+        </label>
+        <div class="settings-toolbar">
+          <button type="button" class="secondary-button" id="historyButton" aria-label="Abrir histórico dos sorteios" aria-expanded="false" aria-controls="historyPanel" title="Histórico">Histórico</button>
+          <button type="button" id="resetButton" class="secondary-button" title="Apagar o histórico e reiniciar todos os sorteios">Reiniciar</button>
+        </div>
+        <section class="history-panel" id="historyPanel" aria-label="Histórico dos sorteios" hidden>
+          <div class="history-header"><strong>Histórico</strong><button type="button" class="history-close" id="closeHistoryButton" aria-label="Fechar histórico">×</button></div>
+          <ol id="historyList" class="history-list"></ol>
+          <p id="historyEmpty" class="history-empty">Nenhum nome sorteado ainda.</p>
+        </section>
+      </aside>
     </section>
   </main>
 

@@ -7,7 +7,7 @@
 }
 * { box-sizing: border-box; }
 html { min-height: 100%; background: #04132d; }
-body { margin: 0; min-height: 100%; color: #fff; }
+body { margin: 0; min-height: 100%; color: #fff; overflow: hidden; }
 button { font: inherit; cursor: pointer; }
 button:focus-visible, input:focus-visible + .switch { outline: 3px solid #a5edff; outline-offset: 4px; }
 button:disabled { cursor: not-allowed; }
@@ -19,9 +19,10 @@ button:disabled { cursor: not-allowed; }
   isolation: isolate;
   background-image:
     linear-gradient(90deg, rgba(0,8,28,.14) 0%, rgba(0,8,28,.10) 47%, transparent 72%),
-    url("ILHA.jpg");
+    url("ILHA2.jpg");
   background-size: cover;
   background-position: center center;
+  width: 100vw;
   background-repeat: no-repeat;
   overflow: hidden;
 }
@@ -198,4 +199,53 @@ button:disabled { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) {
   .confetti-piece { display: none; }
   *, *::before, *::after { scroll-behavior: auto !important; }
+}
+
+/* V3: modo apresentação — área principal livre, apenas giro e ajustes discretos. */
+:root { --wheel-size: min(51svh, 36vw, 555px); }
+.experience { height: 100svh; height: 100dvh; }
+.workspace { min-height: 100svh; min-height: 100dvh; width: min(53vw, 820px); gap: 15px; padding: clamp(210px, 27vh, 335px) 20px 26px 2.8vw; }
+.control-panel { width: min(calc(var(--wheel-size) + 16px), 100%); padding: 10px; border-radius: 18px; background: linear-gradient(110deg, rgba(3,23,59,.80),rgba(3,20,58,.62)); }
+.action-row { gap: 8px; }
+.spin-button { min-height: 54px; }
+.draw-counter { text-align: center; padding: 7px 5px 1px; letter-spacing: .07em; font-size: 12px; }
+.fullscreen-toggle { position: fixed; right: 19px; top: 18px; z-index: 12; width: 42px; height: 42px; display:grid;place-items:center; background:rgba(3,22,58,.55); border:1px solid rgba(152,221,255,.45); border-radius:13px;color:#dff5ff;backdrop-filter:blur(12px); }
+.fullscreen-toggle:hover { background: rgba(5,60,110,.7); }
+.fullscreen-toggle svg { width:22px;height:22px; }
+.settings-panel { position:fixed; z-index:20; right:18px; bottom:18px; width:min(330px,calc(100vw - 36px)); max-height:min(65dvh,520px); overflow:auto; border:1px solid rgba(126,212,255,.53); border-radius:20px; padding:19px; background:linear-gradient(138deg, rgba(6,30,74,.97), rgba(4,16,46,.96)); box-shadow:0 24px 60px rgba(0,0,0,.6); backdrop-filter:blur(20px); }
+.settings-heading {display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;font-size:15px;letter-spacing:.045em;color:#f4fbff;}
+.settings-panel .no-repeat-toggle { font-size:14px; margin: 0 0 20px; gap:12px; }
+.settings-panel .switch {flex:0 0 37px;}
+.settings-toolbar {display:flex;gap:10px;}
+.secondary-button { flex:1;min-height:44px;border:1px solid #65b9e8;border-radius:10px;background:rgba(26,86,137,.62);color:#edfaff;font-weight:700;font-size:13px; }
+.secondary-button:hover {background:rgba(38,112,173,.85);}
+.settings-panel .history-panel { width:100%; margin-top:14px; max-height:min(30svh,260px); padding: 12px; background:rgba(3,15,42,.65); }
+.settings-panel .history-close { font-size:25px; padding:3px 9px; }
+/* Redefine breakpoints após os estilos originais para evitar sobreposição do título. */
+@media (max-height: 830px) and (min-width: 901px) {
+  :root {--wheel-size: min(50svh,35vw,520px);}
+  .workspace {padding-top:clamp(190px,27vh,250px);gap:13px;}
+}
+@media (max-width: 900px) {
+  :root {--wheel-size:min(70vw,51svh,530px);}
+  .workspace {width:min(100%,700px);padding:133px 15px 22px;gap:15px;}
+  .fullscreen-toggle { right:10px;bottom:10px;top:auto;width:38px;height:38px; }
+}
+@media (max-width: 580px) {
+  :root {--wheel-size:min(88vw,45svh,440px);}
+  .workspace {padding:126px 11px 18px;gap:13px;}
+  .control-panel {padding:9px;}
+  .spin-button {min-height:50px;}
+  .settings-panel { bottom:60px; right:10px; width:min(330px,calc(100vw - 20px));}
+}
+@media (max-height: 650px) and (orientation: landscape) {
+  :root {--wheel-size:min(48svh,36vw,345px);}
+  .workspace {width:54%;padding:clamp(122px,29vh,180px) 13px 12px 18px;gap:9px;}
+  .spin-button { min-height:42px; }
+  .control-panel { padding:7px; }
+  .draw-counter { padding-top:5px; }
+}
+@media (max-height: 480px) and (orientation: landscape) {
+  :root {--wheel-size:min(48svh,30vw);}
+  .workspace {padding-top:100px;gap:7px;}
 }

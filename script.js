@@ -17,7 +17,7 @@ const NOMES = Object.freeze([
   "TIAGO"
 ]);
 
-const STORAGE_KEY = "roleta_ilha_v1";
+const STORAGE_KEY = "roleta_ilha2_v1";
 const TAU = Math.PI * 2;
 const $ = (selector) => document.querySelector(selector);
 const rotor = $("#wheelRotor");
@@ -28,6 +28,9 @@ const spinButtonText = $("#spinButtonText");
 const noRepeatToggle = $("#noRepeatToggle");
 const drawCounter = $("#drawCounter");
 const historyPanel = $("#historyPanel");
+const settingsPanel = $("#settingsPanel");
+const settingsButton = $("#settingsButton");
+const fullscreenButton = $("#fullscreenButton");
 const historyList = $("#historyList");
 const historyEmpty = $("#historyEmpty");
 const historyButton = $("#historyButton");
@@ -218,6 +221,7 @@ function spin() {
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const duration = reduceMotion ? 700 : 5400 + randomInteger(850);
   isSpinning = true;
+  closeSettings();
   historyPanel.hidden = true;
   historyButton.setAttribute("aria-expanded", "false");
   historyButton.setAttribute("aria-label", "Abrir histórico dos sorteios");
@@ -237,6 +241,8 @@ function closeResult() {
   if (previousFocus && previousFocus.isConnected) previousFocus.focus();
   else spinButton.focus();
   if (noRepeatToggle.checked && eligibleNames().length === 0) {
+    settingsPanel.hidden = false;
+    settingsButton.setAttribute("aria-expanded", "true");
     historyPanel.hidden = false;
     historyButton.setAttribute("aria-expanded", "true");
     historyButton.setAttribute("aria-label", "Fechar histórico dos sorteios");
@@ -256,6 +262,18 @@ spinButton.addEventListener("click", spin);
 continueButton.addEventListener("click", closeResult);
 $("#resetButton").addEventListener("click", reset);
 noRepeatToggle.addEventListener("change", () => { saveSettings(); updateUI(); });
+function closeSettings() {
+  settingsPanel.hidden = true;
+  settingsButton.setAttribute("aria-expanded", "false");
+  settingsButton.setAttribute("aria-label", "Abrir opções");
+}
+settingsButton.addEventListener("click", () => {
+  settingsPanel.hidden = !settingsPanel.hidden;
+  const shown = !settingsPanel.hidden;
+  settingsButton.setAttribute("aria-expanded", String(shown));
+  settingsButton.setAttribute("aria-label", shown ? "Fechar opções" : "Abrir opções");
+});
+$("#closeSettingsButton").addEventListener("click", () => {closeSettings();settingsButton.focus();});
 historyButton.addEventListener("click", () => {
   const show = historyPanel.hidden;
   historyPanel.hidden = !show;
@@ -268,7 +286,7 @@ $("#closeHistoryButton").addEventListener("click", () => {
   historyButton.focus();
 });
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !resultOverlay.hidden) { event.preventDefault(); closeResult(); }
+  if (event.key === "Escape" && !resultOverlay.hidden) { event.preventDefault(); closeResult(); } else if (event.key === "Escape" && !settingsPanel.hidden) { closeSettings(); settingsButton.focus(); }
   if ((event.code === "Space" || event.code === "Enter") && event.target === document.body && resultOverlay.hidden && !isSpinning) {
     event.preventDefault(); spin();
   }
@@ -276,5 +294,47 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault(); continueButton.focus();
   }
 });
+
+function tryEnterFullscreen() {
+  if (document.fullscreenElement) return Promise.resolve(true);
+  const root = document.documentElement;
+  if (!root.requestFullscreen) return Promise.resolve(false);
+  try { return root.requestFullscreen({navigationUI: "hide"}).then(() => true).catch(() => false); }
+  catch (_error) { return Promise.resolve(false); }
+}
+async function toggleFullscreen() {
+  if (document.fullscreenElement) {
+    try { await document.exitFullscreen(); } catch (_error) {}
+    return;
+  }
+  if (!(await tryEnterFullscreen())) showToast("Para tela cheia, use F11 ou permita o modo de apresentação no navegador.");
+}
+function syncFullscreenControl() {
+  const active = Boolean(document.fullscreenElement);
+  fullscreenButton.setAttribute("aria-label", active ? "Sair da tela cheia" : "Ativar tela cheia");
+  fullscreenButton.title = active ? "Sair da tela cheia" : "Tela cheia (F11 no computador)";
+}
+fullscreenButton.addEventListener("click", toggleFullscreen);
+document.addEventListener("fullscreenchange", syncFullscreenControl);
+function setupFullscreenExperience() {
+  // Fullscreen real não pode ser garantido na abertura: o navegador costuma exigir um gesto.
+  // Ocupamos 100% da viewport imediatamente e pedimos fullscreen no primeiro gesto permitido.
+  tryEnterFullscreen(); // Alguns navegadores e instalações em quiosque permitem esta abertura.
+  let attempted = false;
+  const onUserGesture = (event) => {
+    if (attempted) return;
+    attempted = true;
+    // O botão dedicado gerencia sua própria entrada/saída sem disparar duas ações.
+    const isFullscreenButton = event.target instanceof Element &&
+      Boolean(event.target.closest("#fullscreenButton"));
+    if (!isFullscreenButton) tryEnterFullscreen();
+    window.removeEventListener("pointerdown", onUserGesture, true);
+    window.removeEventListener("keydown", onUserGesture, true);
+  };
+  window.addEventListener("pointerdown", onUserGesture, {capture:true});
+  window.addEventListener("keydown", onUserGesture, {capture:true});
+}
+
 loadSettings();
 updateUI();
+setupFullscreenExperience();
