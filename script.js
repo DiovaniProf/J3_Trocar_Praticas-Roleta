@@ -17,7 +17,14 @@ const NOMES = Object.freeze([
   "TIAGO"
 ]);
 
-const STORAGE_KEY = "roleta_ilha2_v1";
+const STORAGE_KEY = "roleta_ilha2_v1"; // Mantém o histórico da versão anterior.
+// Símbolos fixos por participante. O ícone sempre aparece depois do nome.
+const SIMBOLOS = Object.freeze({
+  "KELI": "estrela", "CRISTIANE": "estrela", "DIJALMARY": "estrela",
+  "TIAGO": "lua", "ROSEMERI": "lua", "ANDREIA": "lua",
+  "EDENILSE": "sol", "ILSE": "sol", "LILIANA": "sol", "MARIANE": "sol"
+});
+const GLIFOS = Object.freeze({ estrela: "★", lua: "☾", sol: "☀" });
 const TAU = Math.PI * 2;
 const $ = (selector) => document.querySelector(selector);
 const rotor = $("#wheelRotor");
@@ -77,6 +84,67 @@ function randomInteger(maxExclusive) {
   }
   return Math.floor(Math.random() * maxExclusive);
 }
+/**
+ * Desenha os ícones como vetores: ficam nítidos e iguais em qualquer computador,
+ * sem depender das fontes de emoji ou de arquivos adicionais.
+ * Coordenadas em pixels de um canvas de 900×900.
+ */
+function desenharSimbolo(tipo, x, y, r, apagado = false) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.shadowBlur = apagado ? 1 : 13;
+  ctx.shadowColor = tipo === "sol" ? "rgba(255,193,89,.8)" : "rgba(112,220,255,.82)";
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.globalAlpha = apagado ? .55 : 1;
+  if (tipo === "estrela") {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const angle = -Math.PI / 2 + i * Math.PI / 5;
+      const dist = i % 2 === 0 ? r : r * .44;
+      const px = Math.cos(angle) * dist;
+      const py = Math.sin(angle) * dist;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = "#f7d88b";
+    ctx.strokeStyle = "#fff6c8";
+    ctx.lineWidth = 2;
+    ctx.fill();
+    ctx.stroke();
+  } else if (tipo === "lua") {
+    // Lua crescente definida por duas curvas, independente da cor do setor.
+    ctx.beginPath();
+    ctx.moveTo(r * .60, -r * .85);
+    ctx.bezierCurveTo(-r * 1.30, -r * 1.08, -r * 1.18, r * 1.12, r * .56, r * .86);
+    ctx.bezierCurveTo(-r * .38, r * .40, -r * .40, -r * .42, r * .60, -r * .85);
+    ctx.closePath();
+    ctx.fillStyle = "#d1eaff";
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+    ctx.fill();
+    ctx.stroke();
+  } else {
+    ctx.strokeStyle = "#ffe59d";
+    ctx.lineWidth = 3.7;
+    for (let i = 0; i < 8; i++) {
+      const a = i * Math.PI / 4;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * r * .70, Math.sin(a) * r * .70);
+      ctx.lineTo(Math.cos(a) * r * 1.10, Math.sin(a) * r * 1.10);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(0, 0, r * .49, 0, TAU);
+    ctx.fillStyle = "#ffcd65";
+    ctx.strokeStyle = "#fff2c8";
+    ctx.lineWidth = 2;
+    ctx.fill();
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawWheel() {
   if (!ctx) return;
   const size = 900;
@@ -108,30 +176,39 @@ function drawWheel() {
     ctx.fillStyle = fill; ctx.fill();
     ctx.strokeStyle = "rgba(175,218,255,.72)"; ctx.lineWidth = 3; ctx.stroke();
 
-    // O setor sorteado fica um pouco mais escuro quando a repetição está desativada.
     if (used.has(NOMES[i])) {
       ctx.fillStyle = "rgba(0,5,24,.49)"; ctx.fill();
     }
 
-    // Rótulo radial, invertido no semicírculo esquerdo para não ficar de cabeça para baixo.
+    const nome = NOMES[i];
+    const foiSorteado = used.has(nome);
+
+    // Todos os nomes começam perto da CIRCUNFERÊNCIA e são lidos para o CENTRO.
+    // Não há inversão na metade esquerda: o sentido radial é idêntico para todos.
     ctx.save();
     ctx.rotate(middle);
-    const angle = ((middle % TAU) + TAU) % TAU;
-    const isLeftHalf = angle > Math.PI / 2 && angle < Math.PI * 1.5;
-    ctx.translate(275, 0);
-    if (isLeftHalf) ctx.rotate(Math.PI);
-    const name = NOMES[i];
-    const fontSize = name.length >= 9 ? 35 : name.length >= 8 ? 38 : 43;
-    ctx.font = `800 ${fontSize}px "Segoe UI", Arial, sans-serif`;
-    ctx.textAlign = "center";
+    ctx.translate(366, 0);
+    ctx.rotate(Math.PI);
+    const maxLarguraNome = 216;
+    let fonte = 43;
+    do {
+      ctx.font = `800 ${fonte}px "Segoe UI", Arial, sans-serif`;
+      if (ctx.measureText(nome).width <= maxLarguraNome || fonte <= 32) break;
+      fonte--;
+    } while (true);
+    const textoLargura = ctx.measureText(nome).width;
+    ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = "rgba(3,10,36,.7)";
-    ctx.strokeStyle = "rgba(2,17,50,.4)";
-    ctx.lineWidth = 4;
-    ctx.strokeText(name, 0, 0, 240);
-    ctx.fillStyle = used.has(name) ? "#a5bcd4" : "#f6fbff";
-    ctx.fillText(name, 0, 0, 240);
+    ctx.shadowBlur = 7;
+    ctx.shadowColor = "rgba(2,12,39,.9)";
+    ctx.strokeStyle = "rgba(3,13,35,.75)";
+    ctx.lineWidth = 5;
+    ctx.strokeText(nome, 0, 0);
+    ctx.fillStyle = foiSorteado ? "#a5bcd4" : "#ffffff";
+    ctx.fillText(nome, 0, 0);
+    // Posiciona o símbolo imediatamente após o último caractere, rumo ao centro.
+    ctx.shadowBlur = 0;
+    desenharSimbolo(SIMBOLOS[nome], textoLargura + 25, 0, 17, foiSorteado);
     ctx.restore();
   }
 
@@ -157,7 +234,7 @@ function updateUI() {
   historyList.replaceChildren();
   history.forEach((name, index) => {
     const item = document.createElement("li");
-    item.textContent = `${name}`;
+    item.textContent = `${name}  ${GLIFOS[SIMBOLOS[name]]}`;
     item.setAttribute("aria-label", `Sorteio ${index + 1}: ${name}`);
     historyList.appendChild(item);
   });
@@ -199,6 +276,9 @@ function completeSpin(name) {
   updateUI();
   previousFocus = document.activeElement;
   winnerName.textContent = name;
+  const simboloVencedor = $("#winnerSymbol");
+  simboloVencedor.textContent = GLIFOS[SIMBOLOS[name]];
+  simboloVencedor.className = `winner-symbol ${SIMBOLOS[name]}`;
   const ended = noRepeatToggle.checked && eligibleNames().length === 0;
   resultCaption.textContent = ended ? "Todos os participantes foram sorteados!" : "Compartilhar é multiplicar possibilidades.";
   continueButton.textContent = ended ? "VER RESULTADOS" : "CONTINUAR";
@@ -318,7 +398,8 @@ fullscreenButton.addEventListener("click", toggleFullscreen);
 document.addEventListener("fullscreenchange", syncFullscreenControl);
 function setupFullscreenExperience() {
   // Fullscreen real não pode ser garantido na abertura: o navegador costuma exigir um gesto.
-  // Ocupamos 100% da viewport imediatamente e pedimos fullscreen no primeiro gesto permitido.
+  // Ocupamos 100% da viewport imediatamente. No primeiro clique,
+  // o pedido de tela cheia é feito no mesmo evento do botão, preservando o clique.
   tryEnterFullscreen(); // Alguns navegadores e instalações em quiosque permitem esta abertura.
   let attempted = false;
   const onUserGesture = (event) => {
@@ -328,10 +409,10 @@ function setupFullscreenExperience() {
     const isFullscreenButton = event.target instanceof Element &&
       Boolean(event.target.closest("#fullscreenButton"));
     if (!isFullscreenButton) tryEnterFullscreen();
-    window.removeEventListener("pointerdown", onUserGesture, true);
+    window.removeEventListener("click", onUserGesture, true);
     window.removeEventListener("keydown", onUserGesture, true);
   };
-  window.addEventListener("pointerdown", onUserGesture, {capture:true});
+  window.addEventListener("click", onUserGesture, {capture:true});
   window.addEventListener("keydown", onUserGesture, {capture:true});
 }
 

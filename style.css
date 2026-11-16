@@ -249,3 +249,8 @@ button:disabled { cursor: not-allowed; }
   :root {--wheel-size:min(48svh,30vw);}
   .workspace {padding-top:100px;gap:7px;}
 }
+
+/* V4: símbolo do participante sorteado. */
+.winner-symbol { display: block; margin: -13px auto 22px; font-family: Georgia, "Segoe UI Symbol", serif; font-size: 42px; line-height: 1; filter: drop-shadow(0 0 9px rgba(139,216,255,.55)); }
+.winner-symbol.estrela, .winner-symbol.sol { color: #ffdf8a; }
+.winner-symbol.lua { color: #d2ecff; }
