@@ -1,16 +1,14 @@
-ROLETA ILHA7 — GitHub Pages
+ROLETA ILHA7 — pacote para GitHub Pages
 
-Arquivos do projeto:
-index.html
-style.css
-script.js
-ILHA7.jpg
+Envie index.html, style.css e script.js para a raiz do repositório.
+O arquivo ILHA7.jpg também deve estar nessa mesma raiz, com esse nome exato.
 
-Envie os quatro arquivos para a raiz do repositorio no GitHub.
-No GitHub Pages, escolha a branch principal e a pasta /(root).
+O CSS usa ILHA7.jpg como fundo fixo, ampliando a roleta no lado esquerdo.
+Os dez nomes têm símbolos após o nome, lidos da borda para o centro.
+Mantidos: sorteio sem repetição, histórico, reiniciar e botão de tela cheia.
 
-Alteracao: somente a imagem de fundo passou a ser ILHA7.jpg.
-Mantidos: roleta grande, nomes e icones de estrela/lua/sol, sorteio,
-historico, controle de repeticao e tentativa de entrar em tela cheia.
-A imagem ocupa a area visivel, mantendo o fundo fixo nos computadores.
-Por seguranca, navegadores normalmente exigem um clique para fullscreen real.
+Importante: a tela ocupa toda a janela ao abrir. Os navegadores geralmente
+exigem clique ou a tecla F11 para fullscreen real, por motivos de segurança.
+A imagem ILHA7.jpg não está incluída neste ZIP porque você a terá na raiz.
+
+GitHub Pages: Settings > Pages > Deploy from a branch > main / (root).

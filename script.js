@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * ROLETA DA ILHA — GitHub Pages, sem bibliotecas externas.
+ * ROLETA ILHA7 — GitHub Pages, sem bibliotecas externas.
  * Para trocar participantes, altere somente os nomes neste array.
  */
 const NOMES = Object.freeze([
