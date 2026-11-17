@@ -19,7 +19,10 @@ const NOMES = Object.freeze([
   "MARIANE"     // lua
 ]);
 
-const STORAGE_KEY = "roleta_ilha2_v1"; // Mantém o histórico da versão anterior.
+// Versão nova de armazenamento: não herdar sorteios com lógica antiga.
+const STORAGE_KEY = "roleta_ilha10_trios_v1";
+const CATEGORIAS = Object.freeze(["sol", "estrela", "lua"]);
+const ROTULOS = Object.freeze({sol:"SOL", estrela:"ESTRELA", lua:"LUA"});
 // Símbolos fixos por participante. O ícone sempre aparece depois do nome.
 const SIMBOLOS = Object.freeze({
   "KELI": "estrela", "CRISTIANE": "estrela", "DIJALMARY": "estrela",
@@ -36,6 +39,8 @@ const spinButton = $("#spinButton");
 const spinButtonText = $("#spinButtonText");
 const noRepeatToggle = $("#noRepeatToggle");
 const drawCounter = $("#drawCounter");
+const roundStatus = $("#roundStatus");
+const roundSequence = $("#roundSequence");
 const historyPanel = $("#historyPanel");
 const settingsPanel = $("#settingsPanel");
 const settingsButton = $("#settingsButton");
@@ -50,32 +55,22 @@ const continueButton = $("#continueButton");
 const toast = $("#toast");
 
 let history = [];
+let roundOrder = [];
+let roundPosition = 0;
+let roundNumber = 0;
+let roundWinners = [];
 let rotation = 0;
 let isSpinning = false;
 let spinTimeout = null;
 let toastTimeout = null;
 let previousFocus = null;
 
-function loadSettings() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!raw || typeof raw !== "object") return;
-    if (Array.isArray(raw.history)) {
-      history = raw.history.filter((name) => NOMES.includes(name)).slice(-100);
-    }
-    if (typeof raw.noRepeat === "boolean") noRepeatToggle.checked = raw.noRepeat;
-  } catch (_error) { /* A roleta funciona mesmo com armazenamento indisponível. */ }
-}
-function saveSettings() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({history, noRepeat: noRepeatToggle.checked})); }
-  catch (_error) { /* Sem armazenamento, os sorteios funcionam normalmente. */ }
-}
-function uniqueNamesDrawn() { return new Set(history); }
-function eligibleNames() {
-  if (!noRepeatToggle.checked) return [...NOMES];
-  const used = uniqueNamesDrawn();
-  return NOMES.filter((name) => !used.has(name));
-}
+/**
+ * Em cada trio, sorteia uma PERMUTAÇÃO de sol/estrela/lua.
+ * Assim o primeiro símbolo muda aleatoriamente, e os próximos dois
+ * são necessariamente os dois tipos que faltam, em ordem também aleatória.
+ * Cada giro sorteia UM nome, para permitir sua participação antes do seguinte.
+ */
 function randomInteger(maxExclusive) {
   if (maxExclusive <= 1) return 0;
   if (globalThis.crypto && typeof crypto.getRandomValues === "function") {
@@ -85,6 +80,109 @@ function randomInteger(maxExclusive) {
     return values[0] % maxExclusive;
   }
   return Math.floor(Math.random() * maxExclusive);
+}
+function shuffle(items) {
+  const array = [...items];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = randomInteger(i + 1);
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+function uniqueNamesDrawn() { return new Set(history); }
+function eligibleNames() {
+  if (!noRepeatToggle.checked) return [...NOMES];
+  const used = uniqueNamesDrawn();
+  return NOMES.filter((name) => !used.has(name));
+}
+function availableForCategory(category) {
+  return eligibleNames().filter((name) => SIMBOLOS[name] === category);
+}
+function availableCategories() {
+  return CATEGORIAS.filter((category) => availableForCategory(category).length > 0);
+}
+function newRound() {
+  const available = availableCategories();
+  if (!available.length) {
+    roundOrder = [];
+    roundPosition = 0;
+    roundWinners = [];
+    saveSettings();
+    return false;
+  }
+  roundNumber++;
+  roundOrder = shuffle(available);
+  roundPosition = 0;
+  roundWinners = [];
+  saveSettings();
+  return true;
+}
+function loadSettings() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!raw || typeof raw !== "object") return;
+    if (Array.isArray(raw.history)) {
+      history = raw.history.filter((name) => NOMES.includes(name)).slice(-100);
+    }
+    if (typeof raw.noRepeat === "boolean") noRepeatToggle.checked = raw.noRepeat;
+    const validOrder = Array.isArray(raw.roundOrder) &&
+      raw.roundOrder.every((category) => CATEGORIAS.includes(category)) &&
+      new Set(raw.roundOrder).size === raw.roundOrder.length &&
+      raw.roundOrder.length >= 1 && raw.roundOrder.length <= 3;
+    if (validOrder && Number.isInteger(raw.roundPosition) &&
+        raw.roundPosition >= 0 && raw.roundPosition <= raw.roundOrder.length &&
+        Number.isInteger(raw.roundNumber) && raw.roundNumber >= 1) {
+      roundOrder = [...raw.roundOrder];
+      roundPosition = raw.roundPosition;
+      roundNumber = raw.roundNumber;
+      if (Array.isArray(raw.roundWinners)) {
+        roundWinners = raw.roundWinners.filter((n) => NOMES.includes(n)).slice(0, roundPosition);
+      }
+      // Impede sequências antigas ou inconsistentes de furarem o sorteio.
+      if (roundWinners.length !== roundPosition ||
+          roundWinners.some((name, index) => SIMBOLOS[name] !== roundOrder[index])) {
+        roundOrder = [];
+        roundPosition = 0;
+        roundWinners = [];
+      }
+    }
+  } catch (_error) { /* O app continua mesmo sem armazenamento disponível. */ }
+}
+function saveSettings() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      history, noRepeat: noRepeatToggle.checked,
+      roundOrder, roundPosition, roundNumber, roundWinners
+    }));
+  } catch (_error) { /* O app continua mesmo sem armazenamento disponível. */ }
+}
+function updateRoundDisplay() {
+  const finished = roundOrder.length > 0 && roundPosition >= roundOrder.length;
+  const finalSolo = roundOrder.length === 1;
+  if (!roundOrder.length) {
+    roundStatus.textContent = "Todos os participantes foram sorteados";
+    roundSequence.replaceChildren();
+    return;
+  }
+  if (finished) {
+    roundStatus.textContent = finalSolo
+      ? "Participante restante sorteado"
+      : `Trio ${roundNumber} concluído · próximo trio com ordem aleatória`;
+  } else {
+    roundStatus.textContent = finalSolo
+      ? "Participante restante · último sorteio"
+      : `Trio ${roundNumber} · ${roundPosition + 1}º de 3 · próximo: ${ROTULOS[roundOrder[roundPosition]]}`;
+  }
+  roundSequence.replaceChildren();
+  roundOrder.forEach((category, i) => {
+    const icon = document.createElement("span");
+    icon.className = "sequence-symbol" + (i < roundPosition ? " completed" : "") +
+      (i === roundPosition && !finished ? " active" : "");
+    icon.textContent = GLIFOS[category];
+    icon.title = ROTULOS[category] + (i < roundWinners.length ? ` — ${roundWinners[i]}` : "");
+    icon.setAttribute("aria-label", icon.title);
+    roundSequence.appendChild(icon);
+  });
 }
 /**
  * Desenha os ícones como vetores: ficam nítidos e iguais em qualquer computador,
@@ -230,7 +328,9 @@ function updateUI() {
     : `${history.length} sorteios realizados`;
   const exhausted = noRepeatToggle.checked && uniqueCount >= NOMES.length;
   spinButton.disabled = isSpinning || exhausted;
-  spinButtonText.textContent = isSpinning ? "SORTEANDO..." : exhausted ? "TODOS SORTEADOS" : "GIRAR ROLETA";
+  spinButtonText.textContent = isSpinning
+    ? "SORTEANDO..."
+    : exhausted ? "TODOS SORTEADOS" : "GIRAR ROLETA";
   noRepeatToggle.disabled = isSpinning;
   $("#resetButton").disabled = isSpinning;
   historyList.replaceChildren();
@@ -242,6 +342,7 @@ function updateUI() {
   });
   historyEmpty.hidden = history.length > 0;
   historyList.hidden = history.length === 0;
+  updateRoundDisplay();
   drawWheel();
 }
 function showToast(message) {
@@ -274,6 +375,9 @@ function completeSpin(name) {
   rotation = ((rotation % 360) + 360) % 360;
   rotor.style.transform = `rotate(${rotation}deg)`;
   history.push(name);
+  // O símbolo definido para este giro já estava no roteiro do trio.
+  roundWinners.push(name);
+  roundPosition++;
   saveSettings();
   updateUI();
   previousFocus = document.activeElement;
@@ -282,7 +386,15 @@ function completeSpin(name) {
   simboloVencedor.textContent = GLIFOS[SIMBOLOS[name]];
   simboloVencedor.className = `winner-symbol ${SIMBOLOS[name]}`;
   const ended = noRepeatToggle.checked && eligibleNames().length === 0;
-  resultCaption.textContent = ended ? "Todos os participantes foram sorteados!" : "Compartilhar é multiplicar possibilidades.";
+  const roundFinished = roundPosition === roundOrder.length;
+  const solo = roundOrder.length === 1;
+  resultCaption.textContent = ended
+    ? "Todos os 10 participantes foram sorteados!"
+    : roundFinished && !solo
+      ? `Trio ${roundNumber} completo! O próximo trio terá nova ordem aleatória.`
+      : roundFinished && solo
+        ? "Participante restante sorteado!"
+        : `Trio ${roundNumber} · ${roundPosition} de 3 nomes · próximo: ${ROTULOS[roundOrder[roundPosition]]}.`;
   continueButton.textContent = ended ? "VER RESULTADOS" : "CONTINUAR";
   resultOverlay.hidden = false;
   continueButton.focus();
@@ -290,8 +402,25 @@ function completeSpin(name) {
 }
 function spin() {
   if (isSpinning || !resultOverlay.hidden) return;
-  const choices = eligibleNames();
-  if (!choices.length) { showToast("Todos os nomes já foram sorteados. Use Reiniciar para começar outra rodada."); return; }
+  // Um novo trio só é preparado DEPOIS dos três nomes anteriores.
+  if (!roundOrder.length || roundPosition >= roundOrder.length) {
+    if (!newRound()) {
+      showToast("Todos os nomes foram sorteados. Use Reiniciar para começar novamente.");
+      updateUI();
+      return;
+    }
+  }
+  const category = roundOrder[roundPosition];
+  const choices = availableForCategory(category);
+  if (!choices.length) {
+    // Ex.: mudança da regra de repetição no decorrer de uma rodada.
+    if (!newRound()) {
+      updateUI();
+      showToast("Todos os nomes foram sorteados.");
+      return;
+    }
+    return spin();
+  }
   const selected = choices[randomInteger(choices.length)];
   const index = NOMES.indexOf(selected);
   const arc = 360 / NOMES.length;
@@ -310,12 +439,10 @@ function spin() {
   updateUI();
   rotor.style.transition = "none";
   rotor.style.transform = `rotate(${rotation}deg)`;
-  // Forçar o navegador a registrar a posição inicial antes da transição.
   void rotor.offsetWidth;
   rotation += totalSpin;
   rotor.style.transition = `transform ${duration}ms cubic-bezier(.14,.75,.06,1)`;
   rotor.style.transform = `rotate(${rotation}deg)`;
-  // Timeout de segurança para navegadores que não disparam transitionend.
   spinTimeout = setTimeout(() => completeSpin(selected), duration + 80);
 }
 function closeResult() {
@@ -333,7 +460,11 @@ function closeResult() {
 function reset() {
   if (isSpinning) return;
   history = [];
-  saveSettings();
+  roundOrder = [];
+  roundPosition = 0;
+  roundNumber = 0;
+  roundWinners = [];
+  newRound();
   updateUI();
   historyPanel.hidden = true;
   historyButton.setAttribute("aria-expanded", "false");
@@ -343,7 +474,15 @@ function reset() {
 spinButton.addEventListener("click", spin);
 continueButton.addEventListener("click", closeResult);
 $("#resetButton").addEventListener("click", reset);
-noRepeatToggle.addEventListener("change", () => { saveSettings(); updateUI(); });
+noRepeatToggle.addEventListener("change", () => {
+  // Uma troca de regra inicia um novo trio, sem descartar o histórico.
+  roundOrder = [];
+  roundPosition = 0;
+  roundWinners = [];
+  newRound();
+  updateUI();
+  showToast("Regra atualizada. Novo sorteio com ordem aleatória dos símbolos.");
+});
 function closeSettings() {
   settingsPanel.hidden = true;
   settingsButton.setAttribute("aria-expanded", "false");
@@ -419,5 +558,6 @@ function setupFullscreenExperience() {
 }
 
 loadSettings();
+if (!roundOrder.length) newRound();
 updateUI();
 setupFullscreenExperience();

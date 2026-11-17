@@ -29,7 +29,7 @@
         <div class="wheel-light" aria-hidden="true"></div>
         <div class="wheel-rotor" id="wheelRotor">
           <canvas id="wheelCanvas" width="900" height="900" role="img"
-                  aria-label="Roleta com dez participantes. Keli, Cristiane e Dijalmary com estrela; Tiago, Rosemeri e Mariane com lua; Andreia, Edenilse, Ilse e Liliana com sol. Os símbolos estão alternados nos setores. Todos os nomes são lidos de fora para dentro."></canvas>
+                  aria-label="Roleta com dez participantes em trios de símbolos. Keli, Cristiane e Dijalmary com estrela; Tiago, Rosemeri e Mariane com lua; Andreia, Edenilse, Ilse e Liliana com sol. Os símbolos estão alternados nos setores. Todos os nomes são lidos de fora para dentro."></canvas>
         </div>
         <div class="wheel-pointer" aria-hidden="true">
           <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
@@ -60,6 +60,10 @@
           <button type="button" class="icon-button" id="settingsButton" aria-label="Abrir opções" aria-expanded="false" aria-controls="settingsPanel" title="Opções da roleta">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 17h16M9 4v6M15 14v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="2.3" fill="#a5edff"/><circle cx="15" cy="17" r="2.3" fill="#a5edff"/></svg>
           </button>
+        </div>
+        <div class="round-indicator" aria-live="polite">
+          <span id="roundStatus" class="round-status">Preparando trio...</span>
+          <span id="roundSequence" class="round-sequence" aria-label="Sequência de símbolos"></span>
         </div>
         <div id="drawCounter" class="draw-counter" aria-live="polite">0 de 10 sorteados</div>
       </div>
