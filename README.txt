@@ -16,7 +16,7 @@ Alterações:
 - Título em duas linhas, escrito pelo HTML (não na imagem):
   Compartilhar experiências,
   ampliar possibilidades.
-- Título acima e à direita da roleta, adaptado para celulares.
+- Título centralizado horizontalmente no topo da página, adaptado para celulares.
 - Nomes com símbolos fixos e setores redistribuídos para alternar os três
   símbolos ao redor de toda a circunferência (sem dois iguais lado a lado).
 - Sol: Andreia, Edenilse, Ilse, Liliana.
@@ -27,4 +27,4 @@ Alterações:
 GitHub Pages: Settings > Pages > Deploy from a branch > main / (root).
 Navegadores podem exigir um clique para autorizar fullscreen real.
 
-Ajuste desta revisão: título HTML deslocado levemente para o centro no desktop.
+Ajuste desta revisão: título em duas linhas centralizado na página, preservando a margem superior anterior.

@@ -2,7 +2,7 @@
    Imagem ILHA10.png deve existir NA MESMA PASTA que index.html e style.css. */
 :root {
   color-scheme: dark;
-  --wheel-size: min(67dvh, 45vw, 710px, calc(100dvh - 180px));
+  --wheel-size: min(64dvh, 45vw, 710px, calc(100dvh - 180px));
   --sky: #04142e;
   font-family: "Segoe UI", Arial, sans-serif;
 }
@@ -25,11 +25,11 @@ button:focus-visible, input:focus-visible + .switch { outline: 3px solid #aeedff
   background: linear-gradient(90deg, rgba(1, 7, 24, .15), rgba(0, 8, 28, .04) 64%, transparent);
 }
 
-/* Título HTML em duas linhas: ligeiramente mais centralizado, ainda à direita da roleta. */
+/* Título HTML em duas linhas, centralizado horizontalmente na página. */
 .headline {
   position: absolute; z-index: 2;
   top: clamp(54px, 8.8dvh, 116px);
-  left: 44.5%; right: 6.5%;
+  left: 0; right: 0; width: 100%;
   margin: 0;
   color: #ecf6ff;
   font: italic 700 clamp(30px, 2.72vw, 52px) / 1.15 Georgia, "Times New Roman", serif;
@@ -157,7 +157,7 @@ button:focus-visible, input:focus-visible + .switch { outline: 3px solid #aeedff
 }
 @media (max-width: 900px) {
   :root { --wheel-size: min(74vw, 54dvh, 595px, calc(100dvh - 215px)); }
-  .headline { top: 18px; left: 9%; right: 9%;
+  .headline { top: 18px; left: 0; right: 0; width: 100%; padding-inline: 9%;
     font-size: clamp(23px,3.9vw,37px); text-align: center; }
   .headline span { white-space: normal; }
   .workspace { width: 100%; justify-content: center; padding: 132px 15px 20px; }
@@ -166,7 +166,7 @@ button:focus-visible, input:focus-visible + .switch { outline: 3px solid #aeedff
 }
 @media (max-width: 580px) {
   :root { --wheel-size: min(91vw, 48dvh, 470px, calc(100dvh - 220px)); }
-  .headline { left: 5%; right: 5%; top: 18px; font-size: clamp(22px,5.3vw,32px); }
+  .headline { left: 0; right: 0; width: 100%; padding-inline: 5%; top: 18px; font-size: clamp(22px,5.3vw,32px); }
   .workspace { padding: 125px 11px 15px; gap: 12px; }
   .experience::before { background-position: 59% center; }
   .wheel-pointer { top: -18px; }
@@ -178,7 +178,7 @@ button:focus-visible, input:focus-visible + .switch { outline: 3px solid #aeedff
 @media (max-height: 650px) and (orientation: landscape) {
   :root { --wheel-size: min(60dvh, 38vw, calc(100dvh - 120px)); }
   .workspace { width: 57%; padding: 70px 12px 9px; justify-content: flex-end; gap: 7px; }
-  .headline { left: 45%; right: 5%; top: 17px; font-size: clamp(18px, 2.4vw, 32px); }
+  .headline { left: 0; right: 0; width: 100%; padding-inline: 5%; top: 17px; font-size: clamp(18px, 2.4vw, 32px); }
   .spin-button { min-height: 42px; }
   .control-panel { padding: 5px; }
   .draw-counter { padding: 4px; }
