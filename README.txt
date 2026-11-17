@@ -26,3 +26,5 @@ Alterações:
 
 GitHub Pages: Settings > Pages > Deploy from a branch > main / (root).
 Navegadores podem exigir um clique para autorizar fullscreen real.
+
+Ajuste desta revisão: título HTML deslocado levemente para o centro no desktop.
