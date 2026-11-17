@@ -1,14 +1,21 @@
-ROLETA ILHA7 — pacote para GitHub Pages
+ROLETA ILHA7 — AJUSTE DE TAMANHO E SÍMBOLOS
+===========================================
+Arquivos:
+- index.html
+- style.css
+- script.js
 
-Envie index.html, style.css e script.js para a raiz do repositório.
-O arquivo ILHA7.jpg também deve estar nessa mesma raiz, com esse nome exato.
+Coloque os três arquivos na raiz do seu repositório GitHub Pages, ao lado de ILHA7.jpg.
+A imagem ILHA7.jpg NÃO está incluída neste ZIP, pois já estará na raiz.
 
-O CSS usa ILHA7.jpg como fundo fixo, ampliando a roleta no lado esquerdo.
-Os dez nomes têm símbolos após o nome, lidos da borda para o centro.
-Mantidos: sorteio sem repetição, histórico, reiniciar e botão de tela cheia.
+Atualizações:
+- roleta menor o suficiente para ficar abaixo do título da imagem, ainda em tamanho de apresentação;
+- ILHA7.jpg continua fixo como plano de fundo;
+- luas: Tiago, Rosemeri e Mariane;
+- estrelas: Keli, Cristiane e Dijalmary;
+- sóis: Andreia, Edenilse, Ilse e Liliana;
+- preservados os nomes e o sorteio sem repetição, histórico, botão girar e tela cheia.
 
-Importante: a tela ocupa toda a janela ao abrir. Os navegadores geralmente
-exigem clique ou a tecla F11 para fullscreen real, por motivos de segurança.
-A imagem ILHA7.jpg não está incluída neste ZIP porque você a terá na raiz.
-
-GitHub Pages: Settings > Pages > Deploy from a branch > main / (root).
+Para publicar: extraia os arquivos diretamente na raiz do repositório e confirme a
+publicação em Settings > Pages. Atualize a página forçando a recarga com Ctrl+F5.
+O navegador pode exigir um clique para ativar a tela cheia verdadeira.

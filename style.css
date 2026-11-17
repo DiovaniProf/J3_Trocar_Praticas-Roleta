@@ -1,5 +1,5 @@
 /* ROLETa ILHA7 — fundo fixo. ILHA7.jpg deve estar na raiz com index.html */
-:root{color-scheme:dark;--wheel-size:min(74dvh,48vw,760px,calc(100dvh - 205px));font-family:"Segoe UI",Arial,sans-serif}
+:root{color-scheme:dark;--wheel-size:min(66dvh,46vw,760px,calc(100dvh - 350px));font-family:"Segoe UI",Arial,sans-serif}
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;background:#04142e;color:#fff}
 body{overflow:hidden}
@@ -13,7 +13,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
 .experience::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:#04142e url("ILHA7.jpg") center center/cover no-repeat}
 .experience::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(0,7,29,.18),rgba(0,7,29,.09) 50%,transparent 70%)}
 /* A roleta ocupa o lado esquerdo, deixando a ilha descoberta à direita. */
-.workspace{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:15px;width:min(58vw,930px);min-height:100vh;min-height:100dvh;padding:clamp(130px,16dvh,190px) 22px 20px clamp(20px,2.5vw,60px)}
+.workspace{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:15px;width:min(58vw,930px);min-height:100vh;min-height:100dvh;padding:clamp(155px,19dvh,220px) 22px 17px clamp(20px,2.5vw,60px)}
 .wheel-area{position:relative;flex:none;width:var(--wheel-size);height:var(--wheel-size);border-radius:50%;filter:drop-shadow(0 20px 31px #0009)}
 .wheel-light{position:absolute;inset:-16px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#53baff12 47%,#4fcaff2b 68%,transparent 74%);filter:blur(10px)}
 .wheel-rotor{position:absolute;inset:0;overflow:hidden;border-radius:50%;background:#082f66;will-change:transform;box-shadow:0 0 0 2px #3faff6,0 0 0 7px #e0f7ff,0 0 0 12px #193d78,0 0 0 14px #69d5ff,0 0 28px 19px #2c8ffd66,inset 0 0 40px #02122d}
@@ -64,9 +64,29 @@ button:disabled{opacity:.6;cursor:not-allowed}
 .confetti-piece{position:fixed;top:-5vh;left:var(--x);z-index:45;width:var(--size);height:calc(var(--size)*1.7);opacity:0;background:var(--color);animation:fall var(--duration) linear forwards;pointer-events:none;box-shadow:0 0 8px var(--color)}
 @keyframes fall{0%{opacity:1;transform:translate3d(0,-15px,0) rotate(var(--r))}100%{opacity:0;transform:translate3d(var(--drift),110vh,0) rotate(750deg)}}
 /* Em monitores baixos, mantém botão e roda inteiros. */
-@media(max-height:830px) and (min-width:901px){:root{--wheel-size:min(70dvh,47vw,680px,calc(100dvh - 185px))}.workspace{padding-top:115px;gap:12px}.spin-button{min-height:49px}}
+@media(max-height:830px) and (min-width:901px){:root{--wheel-size:min(66dvh,46vw,680px,calc(100dvh - 340px))}.workspace{padding-top:115px;gap:12px}.spin-button{min-height:49px}}
 /* Título acessível em telas estreitas, onde a escrita na imagem costuma ser recortada. */
 @media(max-width:900px){:root{--wheel-size:min(73vw,56dvh,610px,calc(100dvh - 210px))}.workspace{width:100%;padding:115px 13px 22px;justify-content:center}.experience::before{background-position:60% center}.fullscreen-toggle{top:auto;bottom:12px;right:12px}.visually-hidden{position:absolute;z-index:2;top:12px;left:12px;width:calc(100% - 24px);height:auto;clip-path:none;overflow:visible;margin:0;text-align:center;font:500 clamp(21px,3.4vw,31px)/1.1 Georgia,serif;color:#e5f3ff;text-shadow:0 0 10px #3b80d9}}
 @media(max-width:580px){:root{--wheel-size:min(91vw,50dvh,470px,calc(100dvh - 190px))}.workspace{padding:106px 11px 15px;gap:13px}.experience::before{background-position:58% center}.wheel-pointer{top:-18px}.control-panel{padding:7px}.spin-button{min-height:50px;font-size:14px}.icon-button{width:48px}.settings-panel{right:10px;bottom:63px}}
 @media(max-height:650px) and (orientation:landscape){:root{--wheel-size:min(62dvh,38vw,calc(100dvh - 120px))}.workspace{width:58%;padding:70px 12px 9px;gap:7px;justify-content:flex-end}.wheel-pointer{top:-17px}.spin-button{min-height:40px}.control-panel{padding:5px}.draw-counter{padding:4px}}
 @media(prefers-reduced-motion:reduce){.confetti-piece{display:none}}
+
+/* V8: espaço reservado para o título impresso no plano de fundo ILHA7.jpg.
+   O diâmetro é limitado pela altura restante para ponteiro, roleta e controles. */
+@media (min-width:901px) and (min-height:651px){
+  .workspace{gap:14px;}
+}
+@media (min-width:901px) and (max-height:830px){
+  .workspace{padding-bottom:13px;}
+}
+
+/* Em celulares, o título original da paisagem é recortado pelo enquadramento cover.
+   Um véu discreto oculta esse recorte e mostra o título acessível e completo. */
+@media (max-width:900px){
+  .experience::after{
+    background:
+      linear-gradient(180deg,#03152f 0,#03152f 129px,rgba(3,21,47,.98) 170px,transparent 220px),
+      linear-gradient(90deg,rgba(0,7,29,.18),rgba(0,7,29,.09) 50%,transparent 70%);
+  }
+  .visually-hidden{white-space:normal;overflow:visible;line-height:1.12;}
+}

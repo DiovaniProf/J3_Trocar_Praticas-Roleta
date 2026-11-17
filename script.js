@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * ROLETA ILHA7 — GitHub Pages, sem bibliotecas externas.
+ * ROLETA ILHA7 — Layout sem sobreposição, símbolos atualizados, GitHub Pages.
  * Para trocar participantes, altere somente os nomes neste array.
  */
 const NOMES = Object.freeze([
@@ -21,8 +21,8 @@ const STORAGE_KEY = "roleta_ilha2_v1"; // Mantém o histórico da versão anteri
 // Símbolos fixos por participante. O ícone sempre aparece depois do nome.
 const SIMBOLOS = Object.freeze({
   "KELI": "estrela", "CRISTIANE": "estrela", "DIJALMARY": "estrela",
-  "TIAGO": "lua", "ROSEMERI": "lua", "ANDREIA": "lua",
-  "EDENILSE": "sol", "ILSE": "sol", "LILIANA": "sol", "MARIANE": "sol"
+  "TIAGO": "lua", "ROSEMERI": "lua", "MARIANE": "lua",
+  "ANDREIA": "sol", "EDENILSE": "sol", "ILSE": "sol", "LILIANA": "sol"
 });
 const GLIFOS = Object.freeze({ estrela: "★", lua: "☾", sol: "☀" });
 const TAU = Math.PI * 2;
