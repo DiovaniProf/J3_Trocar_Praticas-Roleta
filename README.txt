@@ -1,21 +1,28 @@
-ROLETA ILHA7 — AJUSTE DE TAMANHO E SÍMBOLOS
-===========================================
-Arquivos:
-- index.html
-- style.css
-- script.js
+ROLETa ILHA10 — atualização para GitHub Pages
+=============================================
 
-Coloque os três arquivos na raiz do seu repositório GitHub Pages, ao lado de ILHA7.jpg.
-A imagem ILHA7.jpg NÃO está incluída neste ZIP, pois já estará na raiz.
+Envie estes 4 arquivos PARA A MESMA RAIZ do repositório GitHub:
+  index.html
+  style.css
+  script.js
+  ILHA10.png     <-- sua imagem PNG, preparada por você
 
-Atualizações:
-- roleta menor o suficiente para ficar abaixo do título da imagem, ainda em tamanho de apresentação;
-- ILHA7.jpg continua fixo como plano de fundo;
-- luas: Tiago, Rosemeri e Mariane;
-- estrelas: Keli, Cristiane e Dijalmary;
-- sóis: Andreia, Edenilse, Ilse e Liliana;
-- preservados os nomes e o sorteio sem repetição, histórico, botão girar e tela cheia.
+ATENÇÃO: a imagem ILHA10.png NÃO está neste ZIP. Você informou que ela
+estará na raiz do GitHub. Suba-a separadamente, com exatamente esse nome.
+Não use ILHA7.jpg nem ILHA.jpg nesta versão.
 
-Para publicar: extraia os arquivos diretamente na raiz do repositório e confirme a
-publicação em Settings > Pages. Atualize a página forçando a recarga com Ctrl+F5.
-O navegador pode exigir um clique para ativar a tela cheia verdadeira.
+Alterações:
+- ILHA10.png fixa, sem rolagem.
+- Título em duas linhas, escrito pelo HTML (não na imagem):
+  Compartilhar experiências,
+  ampliar possibilidades.
+- Título acima e à direita da roleta, adaptado para celulares.
+- Nomes com símbolos fixos e setores redistribuídos para alternar os três
+  símbolos ao redor de toda a circunferência (sem dois iguais lado a lado).
+- Sol: Andreia, Edenilse, Ilse, Liliana.
+- Estrela: Keli, Cristiane, Dijalmary.
+- Lua: Tiago, Rosemeri, Mariane.
+- Mantidos sorteio, histórico, modo sem repetição, fullscreen quando permitido.
+
+GitHub Pages: Settings > Pages > Deploy from a branch > main / (root).
+Navegadores podem exigir um clique para autorizar fullscreen real.

@@ -1,92 +1,186 @@
-/* ROLETa ILHA7 — fundo fixo. ILHA7.jpg deve estar na raiz com index.html */
-:root{color-scheme:dark;--wheel-size:min(66dvh,46vw,760px,calc(100dvh - 350px));font-family:"Segoe UI",Arial,sans-serif}
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;background:#04142e;color:#fff}
-body{overflow:hidden}
-button{font:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible+.switch{outline:3px solid #aeedff;outline-offset:3px}
-button:disabled{opacity:.6;cursor:not-allowed}
-[hidden]{display:none!important}
-.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;clip-path:inset(50%);white-space:nowrap;overflow:hidden;border:0}
-/* Ao abrir a página, ILHA7 ocupa toda a tela e permanece fixa. */
-.experience{position:relative;isolation:isolate;min-height:100vh;min-height:100dvh;width:100%;overflow:hidden}
-.experience::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:#04142e url("ILHA7.jpg") center center/cover no-repeat}
-.experience::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(0,7,29,.18),rgba(0,7,29,.09) 50%,transparent 70%)}
-/* A roleta ocupa o lado esquerdo, deixando a ilha descoberta à direita. */
-.workspace{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:15px;width:min(58vw,930px);min-height:100vh;min-height:100dvh;padding:clamp(155px,19dvh,220px) 22px 17px clamp(20px,2.5vw,60px)}
-.wheel-area{position:relative;flex:none;width:var(--wheel-size);height:var(--wheel-size);border-radius:50%;filter:drop-shadow(0 20px 31px #0009)}
-.wheel-light{position:absolute;inset:-16px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#53baff12 47%,#4fcaff2b 68%,transparent 74%);filter:blur(10px)}
-.wheel-rotor{position:absolute;inset:0;overflow:hidden;border-radius:50%;background:#082f66;will-change:transform;box-shadow:0 0 0 2px #3faff6,0 0 0 7px #e0f7ff,0 0 0 12px #193d78,0 0 0 14px #69d5ff,0 0 28px 19px #2c8ffd66,inset 0 0 40px #02122d}
-#wheelCanvas{display:block;width:100%;height:100%}
-.wheel-pointer{position:absolute;z-index:4;top:-25px;left:50%;transform:translateX(-50%);width:clamp(35px,3.6vw,59px);height:clamp(49px,4.8vw,76px);filter:drop-shadow(0 0 9px #7ad5ff)}
-.wheel-pointer svg{width:100%;height:100%;display:block}
-.wheel-hub{position:absolute;z-index:3;top:50%;left:50%;transform:translate(-50%,-50%);width:15.5%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#edfaff,#3e78ad 35%,#e8f8ff 50%,#234b83 78%,#e5f9ff);box-shadow:0 0 0 4px #092d6b,0 0 0 7px #8fe5ff,0 0 22px 12px #40aeff66}
-.wheel-hub span{width:76%;height:76%;border-radius:50%;background:conic-gradient(from 30deg,#4a75ae,#e1f5ff,#4574a8,#e7f7ff,#214981,#b1d9f5,#4a75ae)}
-.control-panel{position:relative;width:min(calc(var(--wheel-size) + 18px),100%);padding:9px 10px 7px;border-radius:17px;border:1px solid #8bdcff61;background:linear-gradient(115deg,#041a40e0,#0b2a59c9);box-shadow:0 17px 40px #0008;backdrop-filter:blur(12px)}
-.action-row{display:flex;align-items:stretch;gap:9px}
-.spin-button{display:flex;align-items:center;justify-content:center;gap:11px;flex:1;min-height:54px;border:1px solid #d1f3ff;border-radius:11px;background:linear-gradient(140deg,#d9faff,#5ad1ff 31%,#1975c4 96%);color:#032b53;font-weight:900;font-size:clamp(15px,1.5vw,19px);letter-spacing:.11em;box-shadow:0 3px 0 #0e467e}
-.spin-button:hover:not(:disabled){filter:brightness(1.12)}
-.spin-button svg{width:24px;height:24px}
-.icon-button{width:57px;display:grid;place-items:center;flex:none;border:1px solid #9be4ff81;border-radius:11px;background:#144270;color:#eaf9ff}
-.icon-button:hover,.fullscreen-toggle:hover{background:#1b649c}
-.icon-button svg{width:25px;height:25px}
-.draw-counter{padding:8px 3px 3px;color:#c0eaff;font-size:12px;font-weight:750;letter-spacing:.07em;text-align:center}
-.fullscreen-toggle{position:fixed;z-index:12;top:16px;right:16px;display:grid;place-items:center;width:43px;height:43px;border:1px solid #8fddff88;border-radius:12px;background:#051e45a8;color:#eafaff;backdrop-filter:blur(12px)}
-.fullscreen-toggle svg{width:23px;height:23px}
-.settings-panel{position:fixed;z-index:20;right:18px;bottom:18px;width:min(350px,calc(100vw - 36px));max-height:min(72dvh,540px);overflow-y:auto;padding:20px;border:1px solid #90d9ff95;border-radius:19px;background:linear-gradient(140deg,#062b63f5,#03152fee);box-shadow:0 25px 65px #000b;backdrop-filter:blur(15px)}
-.settings-heading,.history-header{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#f5fbff}
-.settings-heading{margin-bottom:20px;font-size:15px}
-.no-repeat-toggle{display:flex;gap:11px;align-items:center;font-size:14px;color:#dff5ff;cursor:pointer}
-.no-repeat-toggle input{position:absolute;width:1px;height:1px;opacity:0}
-.switch{position:relative;display:block;flex:none;width:40px;height:23px;border:1px solid #91bed8;border-radius:30px;background:#2b4868;transition:background .2s}
-.switch::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#f4fcff;transition:transform .2s}
-.no-repeat-toggle input:checked+.switch{background:#008bc1}
-.no-repeat-toggle input:checked+.switch::after{transform:translateX(17px)}
-.settings-toolbar{display:flex;gap:9px;margin-top:20px}
-.secondary-button{min-height:43px;flex:1;border-radius:10px;border:1px solid #86d4fca3;background:#12598d;color:#e8faff;font-weight:750}
-.secondary-button:hover{background:#1e6ba7}
-.history-panel{margin-top:14px;max-height:235px;overflow-y:auto;padding:12px;border-radius:12px;border:1px solid #8bccff70;background:#031c3cc9}
-.history-close{background:transparent;border:0;color:#fff;font-size:27px;line-height:1;padding:0 4px}
-.history-list{padding-left:26px;margin:8px 0 0;font-size:14px;color:#e1f4ff}
-.history-list li{padding:5px 0;border-bottom:1px solid #92d8ff26}
-.history-empty{font-size:13px;color:#bfe3ff}
-.result-overlay{position:fixed;z-index:40;inset:0;display:grid;place-items:center;padding:20px;background:#00102cb5;backdrop-filter:blur(5px)}
-.result-card{width:min(480px,95vw);text-align:center;padding:32px 25px 28px;border-radius:24px;border:1px solid #85ddff;background:radial-gradient(ellipse at top,#133f76,#041633 75%);box-shadow:0 0 90px #1490ff55,0 25px 70px #0009}
-.result-icon{font-size:45px;line-height:1;color:#8ddfff;text-shadow:0 0 20px #54bfff}
-.result-eyebrow{margin:16px 0;font-size:13px;font-weight:900;letter-spacing:.24em;color:#a8e3ff}
-.winner-name{font-size:clamp(32px,4.5vw,47px);font-weight:900;line-height:1.12;margin:12px 0 20px;text-shadow:0 0 20px #2e8aff7a}
-.winner-symbol{display:block;margin:-9px 0 22px;font-family:Georgia,"Segoe UI Symbol",serif;font-size:44px;color:#ffdc91;filter:drop-shadow(0 0 9px #84cfff)}
-.winner-symbol.lua{color:#e0efff}
-.result-caption{margin:0 0 25px;font-size:14px;color:#d1eaff}
-.continue-button{min-height:52px;width:100%;border:1px solid #a3eaff;border-radius:11px;background:linear-gradient(135deg,#d6faff,#48b9f3);color:#003561;font-weight:900;letter-spacing:.12em}
-.toast{position:fixed;z-index:90;bottom:14px;left:50%;width:max-content;max-width:90vw;padding:12px 20px;opacity:0;transform:translate(-50%,16px);pointer-events:none;border:1px solid #85d8ff;border-radius:11px;background:#061d42f7;box-shadow:0 12px 30px #000a;text-align:center;transition:opacity .2s,transform .2s}
-.toast.visible{opacity:1;transform:translate(-50%,0)}
-.confetti-piece{position:fixed;top:-5vh;left:var(--x);z-index:45;width:var(--size);height:calc(var(--size)*1.7);opacity:0;background:var(--color);animation:fall var(--duration) linear forwards;pointer-events:none;box-shadow:0 0 8px var(--color)}
-@keyframes fall{0%{opacity:1;transform:translate3d(0,-15px,0) rotate(var(--r))}100%{opacity:0;transform:translate3d(var(--drift),110vh,0) rotate(750deg)}}
-/* Em monitores baixos, mantém botão e roda inteiros. */
-@media(max-height:830px) and (min-width:901px){:root{--wheel-size:min(66dvh,46vw,680px,calc(100dvh - 340px))}.workspace{padding-top:115px;gap:12px}.spin-button{min-height:49px}}
-/* Título acessível em telas estreitas, onde a escrita na imagem costuma ser recortada. */
-@media(max-width:900px){:root{--wheel-size:min(73vw,56dvh,610px,calc(100dvh - 210px))}.workspace{width:100%;padding:115px 13px 22px;justify-content:center}.experience::before{background-position:60% center}.fullscreen-toggle{top:auto;bottom:12px;right:12px}.visually-hidden{position:absolute;z-index:2;top:12px;left:12px;width:calc(100% - 24px);height:auto;clip-path:none;overflow:visible;margin:0;text-align:center;font:500 clamp(21px,3.4vw,31px)/1.1 Georgia,serif;color:#e5f3ff;text-shadow:0 0 10px #3b80d9}}
-@media(max-width:580px){:root{--wheel-size:min(91vw,50dvh,470px,calc(100dvh - 190px))}.workspace{padding:106px 11px 15px;gap:13px}.experience::before{background-position:58% center}.wheel-pointer{top:-18px}.control-panel{padding:7px}.spin-button{min-height:50px;font-size:14px}.icon-button{width:48px}.settings-panel{right:10px;bottom:63px}}
-@media(max-height:650px) and (orientation:landscape){:root{--wheel-size:min(62dvh,38vw,calc(100dvh - 120px))}.workspace{width:58%;padding:70px 12px 9px;gap:7px;justify-content:flex-end}.wheel-pointer{top:-17px}.spin-button{min-height:40px}.control-panel{padding:5px}.draw-counter{padding:4px}}
-@media(prefers-reduced-motion:reduce){.confetti-piece{display:none}}
-
-/* V8: espaço reservado para o título impresso no plano de fundo ILHA7.jpg.
-   O diâmetro é limitado pela altura restante para ponteiro, roleta e controles. */
-@media (min-width:901px) and (min-height:651px){
-  .workspace{gap:14px;}
+/* ROLETa ILHA10 — código independente, pronto para GitHub Pages.
+   Imagem ILHA10.png deve existir NA MESMA PASTA que index.html e style.css. */
+:root {
+  color-scheme: dark;
+  --wheel-size: min(67dvh, 45vw, 710px, calc(100dvh - 180px));
+  --sky: #04142e;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
-@media (min-width:901px) and (max-height:830px){
-  .workspace{padding-bottom:13px;}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; background: var(--sky); color: #fff; }
+body { overflow: hidden; }
+button { font: inherit; cursor: pointer; }
+button:disabled { opacity: .6; cursor: not-allowed; }
+button:focus-visible, input:focus-visible + .switch { outline: 3px solid #aeedff; outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.experience { position: relative; isolation: isolate; width: 100%; min-height: 100vh; min-height: 100dvh; overflow: hidden; }
+/* O fundo é fixo. NENHUMA imagem é incorporada aos códigos: use ILHA10.png na raiz. */
+.experience::before {
+  content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background: var(--sky) url("ILHA10.png") center center / cover no-repeat;
+}
+.experience::after {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(1, 7, 24, .15), rgba(0, 8, 28, .04) 64%, transparent);
 }
 
-/* Em celulares, o título original da paisagem é recortado pelo enquadramento cover.
-   Um véu discreto oculta esse recorte e mostra o título acessível e completo. */
-@media (max-width:900px){
-  .experience::after{
-    background:
-      linear-gradient(180deg,#03152f 0,#03152f 129px,rgba(3,21,47,.98) 170px,transparent 220px),
-      linear-gradient(90deg,rgba(0,7,29,.18),rgba(0,7,29,.09) 50%,transparent 70%);
-  }
-  .visually-hidden{white-space:normal;overflow:visible;line-height:1.12;}
+/* O título é HTML real, alinhado mais à direita, em duas linhas editáveis. */
+.headline {
+  position: absolute; z-index: 2;
+  top: clamp(54px, 8.8dvh, 116px);
+  left: 49%; right: 5.8%;
+  margin: 0;
+  color: #ecf6ff;
+  font: italic 700 clamp(30px, 2.72vw, 52px) / 1.15 Georgia, "Times New Roman", serif;
+  letter-spacing: -.035em;
+  text-align: center;
+  text-shadow: 0 3px 3px rgba(0, 6, 28, .8), 0 0 15px rgba(61, 141, 255, .8);
 }
+.headline span { display: block; white-space: nowrap; }
+
+/* Roda grande à esquerda: deixa área livre para o título e a ilha. */
+.workspace {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-end; gap: 15px;
+  width: min(55vw, 900px);
+  min-height: 100vh; min-height: 100dvh;
+  padding: 155px 20px 20px clamp(18px, 2.7vw, 60px);
+}
+.wheel-area {
+  position: relative; flex: none; width: var(--wheel-size); height: var(--wheel-size);
+  border-radius: 50%; filter: drop-shadow(0 19px 28px rgba(0,0,0,.6));
+}
+.wheel-light { position: absolute; inset: -16px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, #53baff12 47%, #4fcaff2b 68%, transparent 74%); filter: blur(10px); }
+.wheel-rotor {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 50%;
+  background: #082f66; will-change: transform;
+  box-shadow: 0 0 0 2px #3faff6, 0 0 0 7px #e0f7ff, 0 0 0 12px #193d78,
+    0 0 0 14px #69d5ff, 0 0 28px 19px #2c8ffd66, inset 0 0 40px #02122d;
+}
+#wheelCanvas { display: block; width: 100%; height: 100%; }
+.wheel-pointer { position: absolute; z-index: 4; top: -25px; left: 50%; transform: translateX(-50%);
+  width: clamp(35px, 3.6vw, 59px); height: clamp(49px, 4.8vw, 76px); filter: drop-shadow(0 0 9px #7ad5ff); }
+.wheel-pointer svg { display: block; width: 100%; height: 100%; }
+.wheel-hub { position: absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  display: grid; place-items: center; width: 15.5%; aspect-ratio: 1; border-radius: 50%;
+  background: linear-gradient(135deg, #edfaff, #3e78ad 35%, #e8f8ff 50%, #234b83 78%, #e5f9ff);
+  box-shadow: 0 0 0 4px #092d6b, 0 0 0 7px #8fe5ff, 0 0 22px 12px #40aeff66; }
+.wheel-hub span { width: 76%; height: 76%; border-radius: 50%;
+  background: conic-gradient(from 30deg, #4a75ae, #e1f5ff, #4574a8, #e7f7ff, #214981, #b1d9f5, #4a75ae); }
+
+.control-panel { position: relative; width: min(calc(var(--wheel-size) + 18px), 100%); padding: 9px 10px 7px;
+  border-radius: 17px; border: 1px solid #8bdcff61; background: linear-gradient(115deg, #041a40e0, #0b2a59c9);
+  box-shadow: 0 17px 40px #0008; backdrop-filter: blur(12px); }
+.action-row { display: flex; align-items: stretch; gap: 9px; }
+.spin-button { display: flex; align-items: center; justify-content: center; gap: 11px;
+  flex: 1; min-height: 54px; border: 1px solid #d1f3ff; border-radius: 11px;
+  background: linear-gradient(140deg, #d9faff, #5ad1ff 31%, #1975c4 96%);
+  color: #032b53; font-weight: 900; font-size: clamp(15px,1.5vw,19px); letter-spacing: .11em;
+  box-shadow: 0 3px 0 #0e467e; }
+.spin-button:hover:not(:disabled) { filter: brightness(1.12); }
+.spin-button svg { width: 24px; height: 24px; }
+.icon-button { width: 57px; display: grid; place-items: center; flex: none;
+  border: 1px solid #9be4ff81; border-radius: 11px; background: #144270; color: #eaf9ff; }
+.icon-button:hover, .fullscreen-toggle:hover { background: #1b649c; }
+.icon-button svg { width: 25px; height: 25px; }
+.draw-counter { padding: 8px 3px 3px; color: #c0eaff; font-size: 12px; font-weight: 750;
+  letter-spacing: .07em; text-align: center; }
+.fullscreen-toggle { position: fixed; z-index: 12; top: 16px; right: 16px;
+  display: grid; place-items: center; width: 43px; height: 43px;
+  border: 1px solid #8fddff88; border-radius: 12px;
+  background: #051e45a8; color: #eafaff; backdrop-filter: blur(12px); }
+.fullscreen-toggle svg { width: 23px; height: 23px; }
+
+.settings-panel { position: fixed; z-index: 20; right: 18px; bottom: 18px;
+  width: min(350px, calc(100vw - 36px)); max-height: min(72dvh, 540px); overflow-y: auto;
+  padding: 20px; border: 1px solid #90d9ff95; border-radius: 19px;
+  background: linear-gradient(140deg, #062b63f5, #03152fee); box-shadow: 0 25px 65px #000b;
+  backdrop-filter: blur(15px); }
+.settings-heading, .history-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #f5fbff; }
+.settings-heading { margin-bottom: 20px; font-size: 15px; }
+.no-repeat-toggle { display: flex; gap: 11px; align-items: center; font-size: 14px; color: #dff5ff; cursor: pointer; }
+.no-repeat-toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.switch { position: relative; display: block; flex: none; width: 40px; height: 23px; border: 1px solid #91bed8; border-radius: 30px;
+  background: #2b4868; transition: background .2s; }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 17px; height: 17px;
+  border-radius: 50%; background: #f4fcff; transition: transform .2s; }
+.no-repeat-toggle input:checked + .switch { background: #008bc1; }
+.no-repeat-toggle input:checked + .switch::after { transform: translateX(17px); }
+.settings-toolbar { display: flex; gap: 9px; margin-top: 20px; }
+.secondary-button { min-height: 43px; flex: 1; border-radius: 10px; border: 1px solid #86d4fca3;
+  background: #12598d; color: #e8faff; font-weight: 750; }
+.secondary-button:hover { background: #1e6ba7; }
+.history-panel { margin-top: 14px; max-height: 235px; overflow-y: auto; padding: 12px;
+  border-radius: 12px; border: 1px solid #8bccff70; background: #031c3cc9; }
+.history-close { background: transparent; border: 0; color: #fff; font-size: 27px; line-height: 1; padding: 0 4px; }
+.history-list { padding-left: 26px; margin: 8px 0 0; font-size: 14px; color: #e1f4ff; }
+.history-list li { padding: 5px 0; border-bottom: 1px solid #92d8ff26; }
+.history-empty { font-size: 13px; color: #bfe3ff; }
+
+.result-overlay { position: fixed; z-index: 40; inset: 0; display: grid; place-items: center; padding: 20px;
+  background: #00102cb5; backdrop-filter: blur(5px); }
+.result-card { width: min(480px,95vw); text-align: center; padding: 32px 25px 28px;
+  border-radius: 24px; border: 1px solid #85ddff;
+  background: radial-gradient(ellipse at top, #133f76, #041633 75%);
+  box-shadow: 0 0 90px #1490ff55, 0 25px 70px #0009; }
+.result-icon { font-size: 45px; line-height: 1; color: #8ddfff; text-shadow: 0 0 20px #54bfff; }
+.result-eyebrow { margin: 16px 0; font-size: 13px; font-weight: 900; letter-spacing: .24em; color: #a8e3ff; }
+.winner-name { font-size: clamp(32px,4.5vw,47px); font-weight: 900; line-height: 1.12;
+  margin: 12px 0 20px; text-shadow: 0 0 20px #2e8aff7a; }
+.winner-symbol { display: block; margin: -9px 0 22px; font-family: Georgia, "Segoe UI Symbol", serif;
+  font-size: 44px; color: #ffdc91; filter: drop-shadow(0 0 9px #84cfff); }
+.winner-symbol.lua { color: #e0efff; }
+.result-caption { margin: 0 0 25px; font-size: 14px; color: #d1eaff; }
+.continue-button { min-height: 52px; width: 100%; border: 1px solid #a3eaff; border-radius: 11px;
+  background: linear-gradient(135deg, #d6faff, #48b9f3); color: #003561; font-weight: 900; letter-spacing: .12em; }
+.toast { position: fixed; z-index: 90; bottom: 14px; left: 50%; width: max-content; max-width: 90vw;
+  padding: 12px 20px; opacity: 0; transform: translate(-50%, 16px); pointer-events: none;
+  border: 1px solid #85d8ff; border-radius: 11px; background: #061d42f7;
+  box-shadow: 0 12px 30px #000a; text-align: center; transition: opacity .2s, transform .2s; }
+.toast.visible { opacity: 1; transform: translate(-50%,0); }
+.confetti-piece { position: fixed; top: -5vh; left: var(--x); z-index: 45;
+  width: var(--size); height: calc(var(--size)*1.7); opacity: 0;
+  background: var(--color); animation: fall var(--duration) linear forwards;
+  pointer-events: none; box-shadow: 0 0 8px var(--color); }
+@keyframes fall {
+  0% { opacity: 1; transform: translate3d(0,-15px,0) rotate(var(--r)); }
+  100% { opacity: 0; transform: translate3d(var(--drift),110vh,0) rotate(750deg); }
+}
+
+@media (max-height: 750px) and (min-width: 901px) {
+  :root { --wheel-size: min(61dvh, 43vw, calc(100dvh - 150px)); }
+  .workspace { padding-top: 120px; gap: 10px; padding-bottom: 11px; }
+  .spin-button { min-height: 47px; }
+  .headline { top: clamp(46px,8dvh,70px); font-size: clamp(28px,2.5vw,43px); }
+}
+@media (max-width: 900px) {
+  :root { --wheel-size: min(74vw, 54dvh, 595px, calc(100dvh - 215px)); }
+  .headline { top: 18px; left: 9%; right: 9%;
+    font-size: clamp(23px,3.9vw,37px); text-align: center; }
+  .headline span { white-space: normal; }
+  .workspace { width: 100%; justify-content: center; padding: 132px 15px 20px; }
+  .experience::before { background-position: 61% center; }
+  .fullscreen-toggle { top: auto; bottom: 12px; right: 12px; }
+}
+@media (max-width: 580px) {
+  :root { --wheel-size: min(91vw, 48dvh, 470px, calc(100dvh - 220px)); }
+  .headline { left: 5%; right: 5%; top: 18px; font-size: clamp(22px,5.3vw,32px); }
+  .workspace { padding: 125px 11px 15px; gap: 12px; }
+  .experience::before { background-position: 59% center; }
+  .wheel-pointer { top: -18px; }
+  .control-panel { padding: 7px; }
+  .spin-button { min-height: 50px; font-size: 14px; }
+  .icon-button { width: 48px; }
+  .settings-panel { right: 10px; bottom: 63px; }
+}
+@media (max-height: 650px) and (orientation: landscape) {
+  :root { --wheel-size: min(60dvh, 38vw, calc(100dvh - 120px)); }
+  .workspace { width: 57%; padding: 70px 12px 9px; justify-content: flex-end; gap: 7px; }
+  .headline { left: 49%; right: 5%; top: 17px; font-size: clamp(18px, 2.4vw, 32px); }
+  .spin-button { min-height: 42px; }
+  .control-panel { padding: 5px; }
+  .draw-counter { padding: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .confetti-piece { display: none; } }

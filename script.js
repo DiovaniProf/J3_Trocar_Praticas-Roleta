@@ -1,20 +1,22 @@
 "use strict";
 
 /**
- * ROLETA ILHA7 — Layout sem sobreposição, símbolos atualizados, GitHub Pages.
+ * ROLETA ILHA10 — Nomes e símbolos alternados, fundo ILHA10.png, GitHub Pages.
  * Para trocar participantes, altere somente os nomes neste array.
  */
+// Distribuição circular alternada: Sol → Estrela → Lua, sem símbolos
+// iguais em setores vizinhos (inclusive no fechamento da circunferência).
 const NOMES = Object.freeze([
-  "ANDREIA",
-  "CRISTIANE",
-  "DIJALMARY",
-  "EDENILSE",
-  "ILSE",
-  "LILIANA",
-  "KELI",
-  "MARIANE",
-  "ROSEMERI",
-  "TIAGO"
+  "ANDREIA",    // sol
+  "KELI",       // estrela
+  "TIAGO",      // lua
+  "EDENILSE",   // sol
+  "CRISTIANE",  // estrela
+  "ROSEMERI",   // lua
+  "ILSE",       // sol
+  "DIJALMARY",  // estrela
+  "LILIANA",    // sol
+  "MARIANE"     // lua
 ]);
 
 const STORAGE_KEY = "roleta_ilha2_v1"; // Mantém o histórico da versão anterior.

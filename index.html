@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="Roleta interativa para compartilhar experiências e ampliar possibilidades.">
-  <title>Compartilhar experiências, ampliar possibilidades.</title>
-  <link rel="preload" href="ILHA7.jpg" as="image">
+  <title>Roleta — Compartilhar experiências, ampliar possibilidades.</title>
+  <link rel="preload" href="ILHA10.png" as="image">
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
@@ -18,15 +18,18 @@
     <button class="fullscreen-toggle" type="button" id="fullscreenButton" aria-label="Ativar tela cheia" title="Tela cheia (F11 no computador)">
       <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <!-- O título faz parte de ILHA7.jpg e é reproduzido apenas em telas pequenas. -->
-    <h1 class="visually-hidden">Compartilhar experiências, ampliar possibilidades.</h1>
+    <!-- Título editável: é produzido pelo HTML, e não faz parte da imagem de fundo. -->
+    <h1 class="headline" aria-label="Compartilhar experiências, ampliar possibilidades.">
+      <span>Compartilhar experiências,</span>
+      <span>ampliar possibilidades.</span>
+    </h1>
 
     <section class="workspace" aria-label="Roleta de participantes">
       <div class="wheel-area">
         <div class="wheel-light" aria-hidden="true"></div>
         <div class="wheel-rotor" id="wheelRotor">
           <canvas id="wheelCanvas" width="900" height="900" role="img"
-                  aria-label="Roleta com dez participantes. Keli, Cristiane e Dijalmary com estrela; Tiago, Rosemeri e Andreia com lua; Edenilse, Ilse, Liliana e Mariane com sol. Todos os nomes são lidos de fora para dentro."></canvas>
+                  aria-label="Roleta com dez participantes. Keli, Cristiane e Dijalmary com estrela; Tiago, Rosemeri e Mariane com lua; Andreia, Edenilse, Ilse e Liliana com sol. Os símbolos estão alternados nos setores. Todos os nomes são lidos de fora para dentro."></canvas>
         </div>
         <div class="wheel-pointer" aria-hidden="true">
           <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
